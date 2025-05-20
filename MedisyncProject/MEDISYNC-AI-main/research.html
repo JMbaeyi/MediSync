@@ -1,0 +1,322 @@
+{% extends "base.html" %}
+
+{% block title %}Research - MediSync AI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .research-hero {
+        position: relative;
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('assets/hero.png');
+        background-size: cover;
+        background-position: center;
+        min-height: 50vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        padding: 80px 20px;
+    }
+
+    .research-hero-content {
+        max-width: 800px;
+        margin: 0 auto;
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .research-hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .research-hero p {
+        font-size: 1.3rem;
+        line-height: 1.6;
+        opacity: 0.9;
+        max-width: 600px;
+        margin: 0 auto;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .research-areas {
+        background: #f8f9fa;
+        padding: 100px 0;
+        position: relative;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 60px;
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .section-header h2 {
+        font-size: 2.5rem;
+        color: #2c3e50;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .section-header p {
+        font-size: 1.2rem;
+        color: #666;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .research-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 30px;
+        margin-top: -50px;
+    }
+
+    .research-card {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .research-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .research-card h3 {
+        color: #2c3e50;
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+    .research-card p {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 25px;
+        font-size: 1.1rem;
+    }
+
+    .research-card ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .research-card li {
+        color: #666;
+        margin-bottom: 12px;
+        padding-left: 28px;
+        position: relative;
+        font-size: 1.05rem;
+    }
+
+    .research-card li::before {
+        content: '→';
+        position: absolute;
+        left: 0;
+        color: #00b09b;
+        font-weight: bold;
+    }
+
+    .publications {
+        padding: 100px 0;
+        background: white;
+    }
+
+    .publication-list {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .publication-item {
+        background: white;
+        padding: 35px;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        margin-bottom: 30px;
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .publication-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .publication-item h3 {
+        color: #2c3e50;
+        font-size: 1.6rem;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    .publication-item p {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        font-size: 1.1rem;
+    }
+
+    .publication-meta {
+        font-size: 1rem;
+        color: #00b09b;
+        font-weight: 500;
+        margin-bottom: 15px;
+    }
+
+    .publication-link {
+        display: inline-flex;
+        align-items: center;
+        color: #00b09b;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+    }
+
+    .publication-link:hover {
+        color: #96c93d;
+        transform: translateX(5px);
+    }
+
+    .publication-link i {
+        margin-left: 8px;
+        font-size: 0.9em;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .research-hero h1 {
+            font-size: 2.5rem;
+        }
+
+        .research-hero p {
+            font-size: 1.1rem;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+        }
+
+        .research-card {
+            padding: 30px;
+        }
+
+        .research-card h3 {
+            font-size: 1.5rem;
+        }
+
+        .publication-item {
+            padding: 25px;
+        }
+
+        .publication-item h3 {
+            font-size: 1.4rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="research-hero">
+    <div class="research-hero-content">
+        <h1>Advancing Healthcare Through AI</h1>
+        <p>Exploring the frontiers of artificial intelligence to revolutionize medical diagnosis and patient care</p>
+    </div>
+</section>
+
+<section class="research-areas">
+    <div class="container">
+        <div class="section-header">
+            <h2>Research Areas</h2>
+            <p>Our team focuses on cutting-edge research in key areas of healthcare AI</p>
+        </div>
+        <div class="research-grid">
+            <div class="research-card">
+                <h3>AI in Medical Imaging</h3>
+                <p>Advancing diagnostic accuracy through deep learning and computer vision technologies.</p>
+                <ul>
+                    <li>Convolutional Neural Networks for Image Analysis</li>
+                    <li>Automated Lesion Detection Systems</li>
+                    <li>Real-time Medical Image Processing</li>
+                    <li>Multi-modal Image Integration</li>
+                </ul>
+            </div>
+
+            <div class="research-card">
+                <h3>Predictive Analytics</h3>
+                <p>Developing sophisticated models for early disease detection and risk assessment.</p>
+                <ul>
+                    <li>Advanced Machine Learning Algorithms</li>
+                    <li>Pattern Recognition in Medical Data</li>
+                    <li>Comprehensive Risk Factor Analysis</li>
+                    <li>Outcome Prediction Models</li>
+                </ul>
+            </div>
+
+            <div class="research-card">
+                <h3>Clinical Decision Support</h3>
+                <p>Creating intelligent systems to enhance healthcare provider decision-making.</p>
+                <ul>
+                    <li>Evidence-based Clinical Recommendations</li>
+                    <li>Treatment Protocol Optimization</li>
+                    <li>Drug Interaction Analysis Systems</li>
+                    <li>Personalized Care Planning Tools</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="publications">
+    <div class="container">
+        <div class="section-header">
+            <h2>Latest Publications</h2>
+            <p>Explore our recent research contributions to the field of medical AI</p>
+        </div>
+        <div class="publication-list">
+            <div class="publication-item">
+                <h3>Deep Learning for Cancer Detection: A Comprehensive Study</h3>
+                <p>An in-depth analysis of various deep learning architectures and their effectiveness in early cancer detection using medical imaging data.</p>
+                <div class="publication-meta">Published in Medical AI Journal, 2024</div>
+                <a href="#" class="publication-link">Read Full Paper <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="publication-item">
+                <h3>Predictive Analytics in Healthcare: Current State and Future Directions</h3>
+                <p>A comprehensive review of machine learning applications in healthcare predictive analytics and their measurable impact on patient outcomes.</p>
+                <div class="publication-meta">Published in Healthcare Informatics Review, 2024</div>
+                <a href="#" class="publication-link">Read Full Paper <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="publication-item">
+                <h3>AI-Driven Clinical Decision Support Systems: A Systematic Review</h3>
+                <p>A detailed examination of the effectiveness and implementation challenges of AI-based clinical decision support systems in healthcare settings.</p>
+                <div class="publication-meta">Published in Journal of Medical AI, 2023</div>
+                <a href="#" class="publication-link">Read Full Paper <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

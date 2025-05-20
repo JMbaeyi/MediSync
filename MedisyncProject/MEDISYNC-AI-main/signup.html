@@ -1,0 +1,322 @@
+{% extends "base.html" %}
+
+{% block title %}MEDISYNC AI - Sign Up{% endblock %}
+
+{% block extra_css %}
+<style>
+    .signup-hero {
+        position: relative;
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('assets/hero.png');
+        background-size: cover;
+        background-position: center;
+        min-height: 40vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        padding: 60px 20px;
+    }
+
+    .signup-hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .signup-hero p {
+        font-size: 1.3rem;
+        max-width: 600px;
+        margin: 0 auto;
+        opacity: 0.9;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        animation: fadeInUp 1s ease-out 0.2s backwards;
+    }
+
+    .signup-container {
+        background: #f8f9fa;
+        padding: 60px 20px;
+    }
+
+    .signup-card {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        width: 100%;
+        max-width: 500px;
+        margin: -100px auto 0;
+        position: relative;
+        animation: fadeInUp 1s ease-out 0.4s backwards;
+    }
+
+    .signup-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .signup-header h2 {
+        font-size: 1.8rem;
+        color: #2c3e50;
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+
+    .signup-header p {
+        color: #666;
+        font-size: 1.1rem;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #2c3e50;
+        font-weight: 500;
+    }
+
+    .input-group {
+        position: relative;
+    }
+
+    .input-group i {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+        font-size: 1.1rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 45px 12px 15px;
+        border: 1px solid rgba(0,0,0,0.1);
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #00b09b;
+        box-shadow: 0 0 0 2px rgba(0,176,155,0.1);
+    }
+
+    .signup-button {
+        width: 100%;
+        padding: 15px 40px;
+        background: linear-gradient(135deg, #00b09b, #96c93d);
+        color: white;
+        border: none;
+        border-radius: 30px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .signup-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .signup-footer {
+        text-align: center;
+        margin-top: 25px;
+    }
+
+    .signup-footer p {
+        color: #666;
+        font-size: 1rem;
+    }
+
+    .signup-footer a {
+        color: #00b09b;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+
+    .signup-footer a:hover {
+        color: #96c93d;
+    }
+
+    .error-message {
+        background: #fff5f5;
+        color: #e74c3c;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 0.95rem;
+        border-left: 4px solid #e74c3c;
+        display: none;
+    }
+
+    .error-message.show {
+        display: block;
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+    .success-message {
+        background: #f0fff4;
+        color: #00b09b;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 0.95rem;
+        border-left: 4px solid #00b09b;
+        display: none;
+    }
+
+    .success-message.show {
+        display: block;
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .signup-hero h1 {
+            font-size: 2.5rem;
+        }
+
+        .signup-hero p {
+            font-size: 1.1rem;
+        }
+
+        .signup-card {
+            padding: 30px 20px;
+            margin-top: -80px;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="signup-hero">
+    <div>
+        <h1>Join MEDISYNC AI</h1>
+        <p>Create your account and start your journey to better health</p>
+    </div>
+</section>
+
+<div class="signup-container">
+    <div class="signup-card">
+        <div class="signup-header">
+            <h2>Create Account</h2>
+            <p>Fill in your details to get started</p>
+        </div>
+
+        {% if error %}
+        <div class="error-message show">{{ error }}</div>
+        {% endif %}
+
+        {% if success %}
+        <div class="success-message show">{{ success }}</div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('signup') }}" id="signupForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="firstName" name="first_name" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="lastName" name="last_name" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" name="password" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="confirmPassword" name="confirm_password" class="form-control" required>
+                </div>
+            </div>
+
+            <button type="submit" class="signup-button">Create Account</button>
+        </form>
+
+        <div class="signup-footer">
+            <p>Already have an account? <a href="/login">Sign In</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+        const firstName = document.getElementById('firstName').value;
+        const lastName = document.getElementById('lastName').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const errorMessage = document.querySelector('.error-message');
+        
+        if (!firstName || !lastName || !email || !password || !confirmPassword) {
+            e.preventDefault();
+            errorMessage.textContent = 'Please fill in all fields';
+            errorMessage.classList.add('show');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            e.preventDefault();
+            errorMessage.textContent = 'Passwords do not match';
+            errorMessage.classList.add('show');
+            return;
+        }
+    });
+</script>
+{% endblock %} 

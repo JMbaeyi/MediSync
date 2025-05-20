@@ -1,0 +1,329 @@
+{% extends "base.html" %}
+
+{% block title %}Lung Cancer Prediction - MediSync AI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .prediction-hero {
+        position: relative;
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('assets/hero.png');
+        background-size: cover;
+        background-position: center;
+        padding: 100px 0;
+        text-align: center;
+        color: white;
+        margin-bottom: 60px;
+    }
+
+    .prediction-hero h1 {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .prediction-hero p {
+        font-size: 1.5rem;
+        max-width: 600px;
+        margin: 0 auto;
+        opacity: 0.9;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        animation: fadeInUp 1s ease-out 0.2s backwards;
+    }
+
+    .prediction-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+
+    .prediction-form {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        margin-bottom: 40px;
+        animation: fadeInUp 1s ease-out 0.4s backwards;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #2c3e50;
+        font-weight: 500;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid rgba(0,0,0,0.1);
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #00b09b;
+        box-shadow: 0 0 0 2px rgba(0,176,155,0.1);
+    }
+
+    .submit-button {
+        display: inline-block;
+        padding: 15px 40px;
+        background: linear-gradient(135deg, #00b09b, #96c93d);
+        color: white;
+        border: none;
+        border-radius: 30px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .submit-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .probability {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        margin-bottom: 40px;
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .confidence-label {
+        font-size: 1.2rem;
+        color: #2c3e50;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    .confidence-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 20px 0;
+    }
+
+    .confidence-value.low-risk {
+        color: #00b09b;
+    }
+
+    .confidence-value.high-risk {
+        color: #e74c3c;
+    }
+
+    .confidence-explanation {
+        color: #666;
+        line-height: 1.7;
+        font-size: 1.1rem;
+        margin: 20px 0;
+    }
+
+    .view-details-btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background: white;
+        color: #00b09b;
+        border: none;
+        border-radius: 30px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        margin: 20px 0;
+    }
+
+    .view-details-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .detailed-explanation {
+        background: #f8f9fa;
+        padding: 30px;
+        border-radius: 12px;
+        margin-top: 30px;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .detailed-explanation h4 {
+        color: #2c3e50;
+        font-size: 1.4rem;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+    .detailed-explanation p {
+        color: #666;
+        line-height: 1.7;
+        margin-bottom: 20px;
+        font-size: 1.1rem;
+    }
+
+    .detailed-explanation ul {
+        padding-left: 20px;
+        margin-bottom: 25px;
+    }
+
+    .detailed-explanation li {
+        color: #666;
+        margin-bottom: 10px;
+        line-height: 1.6;
+    }
+
+    .next-steps {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        margin-top: 25px;
+    }
+
+    .next-steps h5 {
+        color: #2c3e50;
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    .next-steps.urgent {
+        background: #fff5f5;
+        border-left: 4px solid #e74c3c;
+    }
+
+    .next-steps.urgent h5 {
+        color: #e74c3c;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .prediction-hero h1 {
+            font-size: 2.8rem;
+        }
+
+        .prediction-hero p {
+            font-size: 1.2rem;
+        }
+
+        .prediction-form {
+            padding: 30px 20px;
+        }
+
+        .confidence-value {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="prediction-hero">
+    <h1>Lung Cancer Risk Assessment</h1>
+    <p>Our AI-powered tool analyzes your symptoms to assess potential risks</p>
+</section>
+
+<div class="prediction-container">
+    {% if not result %}
+    <form class="prediction-form" method="POST">
+        <!-- Form fields will be here -->
+        <div class="form-group">
+            <label for="age">Age</label>
+            <input type="number" class="form-control" id="age" name="age" required>
+        </div>
+        <!-- Add other form fields as needed -->
+        <button type="submit" class="submit-button">Get Assessment</button>
+    </form>
+    {% endif %}
+
+    {% if result %}
+    <div class="probability">
+        <div class="confidence-label">AI Assessment Result</div>
+        <div class="confidence-value {% if result.prediction == 'Low Risk' %}low-risk{% else %}high-risk{% endif %}">
+            {{ result.prediction }}
+        </div>
+        <div class="confidence-explanation">
+            {% if result.prediction == 'Low Risk' %}
+            Based on your symptoms, our AI model indicates a low risk assessment.
+            {% else %}
+            Our AI model has detected patterns that suggest further medical evaluation may be needed.
+            {% endif %}
+        </div>
+        <button class="view-details-btn" onclick="toggleDetails()">View Full Details</button>
+        <div class="detailed-explanation" id="detailedExplanation" style="display: none;">
+            {% if result.prediction == 'Low Risk' %}
+            <h4>Understanding Your Low Risk Result</h4>
+            <p>A low risk assessment means that based on the information you provided, our AI model has not detected significant patterns associated with lung cancer. However, please note:</p>
+            <ul>
+                <li>This is not a definitive medical diagnosis</li>
+                <li>Regular check-ups with your healthcare provider are still important</li>
+                <li>If you notice any changes in your symptoms, seek medical attention</li>
+            </ul>
+            <div class="next-steps">
+                <h5>Recommended Next Steps:</h5>
+                <ul>
+                    <li>Continue regular health check-ups</li>
+                    <li>Maintain a healthy lifestyle</li>
+                    <li>Avoid smoking and exposure to secondhand smoke</li>
+                    <li>Monitor any changes in your health</li>
+                </ul>
+            </div>
+            {% else %}
+            <h4>Understanding Your High Risk Result</h4>
+            <p>A high risk assessment indicates that our AI model has detected patterns in your symptoms that may warrant further medical attention. It's important to understand:</p>
+            <ul>
+                <li>This is not a diagnosis, but a screening tool</li>
+                <li>Many factors can contribute to these symptoms</li>
+                <li>Only a healthcare professional can provide a proper diagnosis</li>
+            </ul>
+            <div class="next-steps urgent">
+                <h5>Recommended Next Steps:</h5>
+                <ul>
+                    <li>Schedule an appointment with your healthcare provider as soon as possible</li>
+                    <li>Prepare a list of your symptoms and their duration</li>
+                    <li>Share this risk assessment with your healthcare provider</li>
+                    <li>Don't delay seeking professional medical advice</li>
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleDetails() {
+    const detailedExplanation = document.getElementById('detailedExplanation');
+    const button = document.querySelector('.view-details-btn');
+    
+    if (detailedExplanation.style.display === 'none') {
+        detailedExplanation.style.display = 'block';
+        button.textContent = 'Hide Details';
+    } else {
+        detailedExplanation.style.display = 'none';
+        button.textContent = 'View Full Details';
+    }
+}
+</script>
+{% endblock %} 

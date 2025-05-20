@@ -1,0 +1,512 @@
+{% extends "base.html" %}
+
+{% block title %}Breast Cancer Risk Assessment - MediSync AI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .prediction-form {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin: 40px auto;
+        max-width: 1000px;
+    }
+    
+    .prediction-form h2 {
+        color: var(--primary);
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .form-section {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .form-section h3 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+    }
+    
+    .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -10px;
+    }
+    
+    .form-group {
+        flex: 1;
+        min-width: 250px;
+        padding: 0 10px;
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 16px;
+        color: #2c3e50;
+    }
+    
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    
+    .form-group input:focus {
+        border-color: var(--primary);
+        outline: none;
+    }
+    
+    .submit-btn {
+        background: var(--gradient-1);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        display: block;
+        margin: 30px auto;
+        transition: all 0.3s ease;
+    }
+    
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .result-section {
+        background-color: #fff;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin: 30px 0;
+        animation: slideDown 0.5s ease-out;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .prediction {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 15px 0;
+    }
+    
+    .prediction.high-risk {
+        background-color: #ffe5e5;
+        color: #d63031;
+    }
+    
+    .prediction.low-risk {
+        background-color: #e5ffe5;
+        color: #27ae60;
+    }
+    
+    .health-message {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 15px;
+    }
+    
+    .probability {
+        font-size: 18px;
+        margin-top: 10px;
+        text-align: center;
+    }
+    
+    .info-tooltip {
+        display: inline-block;
+        margin-left: 5px;
+        color: #666;
+        cursor: help;
+    }
+    
+    .info-tooltip:hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        background: #333;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 14px;
+        max-width: 200px;
+        z-index: 1000;
+    }
+
+    .algorithm-select {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .algorithm-select label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+
+    .algorithm-select select {
+        padding: 8px 15px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        font-size: 16px;
+        background-color: white;
+    }
+
+    .error-message {
+        background-color: #ffe5e5;
+        color: #d63031;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 15px;
+        text-align: center;
+    }
+
+    .section-explanation {
+        background-color: #f8f9fa;
+        border-left: 4px solid var(--primary);
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 0 5px 5px 0;
+    }
+
+    .section-explanation p {
+        color: #2c3e50;
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .algorithm-info {
+        text-align: center;
+        margin: 15px 0;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        color: #2c3e50;
+    }
+
+    .form-intro {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        border-left: 4px solid var(--primary);
+    }
+
+    .form-intro h3 {
+        color: var(--primary);
+        margin-bottom: 10px;
+    }
+
+    .form-intro p {
+        color: #2c3e50;
+        margin-bottom: 10px;
+        line-height: 1.5;
+    }
+
+    .form-intro ul {
+        margin-left: 20px;
+        color: #2c3e50;
+    }
+
+    .form-intro li {
+        margin-bottom: 5px;
+    }
+
+    .result-explanation {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 15px;
+    }
+
+    .result-explanation p {
+        color: #2c3e50;
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .result-explanation ul {
+        margin-left: 20px;
+        color: #2c3e50;
+    }
+
+    .result-explanation li {
+        margin-bottom: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="prediction-form">
+        <h2>Breast Cancer Risk Assessment</h2>
+        
+        <div class="form-intro">
+            <h3>About This Assessment</h3>
+            <p>This tool utilizes advanced machine learning and artificial intelligence, trained on real-world medical and diagnostic data, to estimate your risk of breast cancer based on your diagnostic measurements. It is designed to help you better understand your health profile and support informed discussions with your healthcare provider. While the tool provides a personalized risk estimate, it does not replace professional medical advice, diagnosis, or treatment. Always consult a healthcare professional for any health concerns.</p>
+            <ul>
+                <li>Answer all questions honestly for the most accurate assessment</li>
+                <li>Enter the exact values from your diagnostic report</li>
+                <li>The assessment takes into account multiple features of the cell nuclei</li>
+            </ul>
+            <p style="margin-top:10px;"><strong>How it works:</strong> The diagnostic tool analyzes your responses using AI/ML models to estimate your risk. For any concerns, always consult a healthcare professional.</p>
+        </div>
+
+        {% if error %}
+        <div class="error-message">{{ error }}</div>
+        {% endif %}
+
+        <form action="/predict_breast_cancer" method="post" id="predictionForm">
+            <div class="input-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                <!-- Mean Values -->
+                <h4 style="grid-column: 1 / -1;">Mean Values</h4>
+                <div class="form-group">
+                    <label for="radius_mean">Radius Mean:</label>
+                    <input type="number" step="0.001" class="form-control" id="radius_mean" name="radius_mean" required value="{{ request.form.get('radius_mean', '14.127') }}">
+                </div>
+                <div class="form-group">
+                    <label for="texture_mean">Texture Mean:</label>
+                    <input type="number" step="0.001" class="form-control" id="texture_mean" name="texture_mean" required value="{{ request.form.get('texture_mean', '19.289') }}">
+                </div>
+                <div class="form-group">
+                    <label for="perimeter_mean">Perimeter Mean:</label>
+                    <input type="number" step="0.001" class="form-control" id="perimeter_mean" name="perimeter_mean" required value="{{ request.form.get('perimeter_mean', '92.295') }}">
+                </div>
+                <div class="form-group">
+                    <label for="area_mean">Area Mean:</label>
+                    <input type="number" step="0.001" class="form-control" id="area_mean" name="area_mean" required value="{{ request.form.get('area_mean', '654.889') }}">
+                </div>
+                <div class="form-group">
+                    <label for="smoothness_mean">Smoothness Mean:</label>
+                    <input type="number" step="0.000001" class="form-control" id="smoothness_mean" name="smoothness_mean" required value="{{ request.form.get('smoothness_mean', '0.096360') }}">
+                </div>
+                <div class="form-group">
+                    <label for="compactness_mean">Compactness Mean:</label>
+                    <input type="number" step="0.000001" class="form-control" id="compactness_mean" name="compactness_mean" required value="{{ request.form.get('compactness_mean', '0.104340') }}">
+                </div>
+                <div class="form-group">
+                    <label for="concavity_mean">Concavity Mean:</label>
+                    <input type="number" step="0.000001" class="form-control" id="concavity_mean" name="concavity_mean" required value="{{ request.form.get('concavity_mean', '0.088799') }}">
+                </div>
+                <div class="form-group">
+                    <label for="concave_points_mean">Concave Points Mean:</label>
+                    <input type="number" step="0.000001" class="form-control" id="concave_points_mean" name="concave_points_mean" required value="{{ request.form.get('concave_points_mean', '0.048919') }}">
+                </div>
+                <div class="form-group">
+                    <label for="symmetry_mean">Symmetry Mean:</label>
+                    <input type="number" step="0.000001" class="form-control" id="symmetry_mean" name="symmetry_mean" required value="{{ request.form.get('symmetry_mean', '0.181162') }}">
+                </div>
+                <div class="form-group">
+                    <label for="fractal_dimension_mean">Fractal Dimension Mean:</label>
+                    <input type="number" step="0.000001" class="form-control" id="fractal_dimension_mean" name="fractal_dimension_mean" required value="{{ request.form.get('fractal_dimension_mean', '0.062798') }}">
+                </div>
+                <!-- Standard Error Values -->
+                <h4 style="grid-column: 1 / -1;">Standard Error Values</h4>
+                <div class="form-group">
+                    <label for="radius_se">Radius SE:</label>
+                    <input type="number" step="0.001" class="form-control" id="radius_se" name="radius_se" required value="{{ request.form.get('radius_se', '0.345090') }}">
+                </div>
+                <div class="form-group">
+                    <label for="texture_se">Texture SE:</label>
+                    <input type="number" step="0.001" class="form-control" id="texture_se" name="texture_se" required value="{{ request.form.get('texture_se', '0.773684') }}">
+                </div>
+                <div class="form-group">
+                    <label for="perimeter_se">Perimeter SE:</label>
+                    <input type="number" step="0.001" class="form-control" id="perimeter_se" name="perimeter_se" required value="{{ request.form.get('perimeter_se', '2.065300') }}">
+                </div>
+                <div class="form-group">
+                    <label for="area_se">Area SE:</label>
+                    <input type="number" step="0.001" class="form-control" id="area_se" name="area_se" required value="{{ request.form.get('area_se', '40.337000') }}">
+                </div>
+                <div class="form-group">
+                    <label for="smoothness_se">Smoothness SE:</label>
+                    <input type="number" step="0.000001" class="form-control" id="smoothness_se" name="smoothness_se" required value="{{ request.form.get('smoothness_se', '0.007038') }}">
+                </div>
+                <div class="form-group">
+                    <label for="compactness_se">Compactness SE:</label>
+                    <input type="number" step="0.000001" class="form-control" id="compactness_se" name="compactness_se" required value="{{ request.form.get('compactness_se', '0.025478') }}">
+                </div>
+                <div class="form-group">
+                    <label for="concavity_se">Concavity SE:</label>
+                    <input type="number" step="0.000001" class="form-control" id="concavity_se" name="concavity_se" required value="{{ request.form.get('concavity_se', '0.031894') }}">
+                </div>
+                <div class="form-group">
+                    <label for="concave_points_se">Concave Points SE:</label>
+                    <input type="number" step="0.000001" class="form-control" id="concave_points_se" name="concave_points_se" required value="{{ request.form.get('concave_points_se', '0.011796') }}">
+                </div>
+                <div class="form-group">
+                    <label for="symmetry_se">Symmetry SE:</label>
+                    <input type="number" step="0.000001" class="form-control" id="symmetry_se" name="symmetry_se" required value="{{ request.form.get('symmetry_se', '0.020542') }}">
+                </div>
+                <div class="form-group">
+                    <label for="fractal_dimension_se">Fractal Dimension SE:</label>
+                    <input type="number" step="0.000001" class="form-control" id="fractal_dimension_se" name="fractal_dimension_se" required value="{{ request.form.get('fractal_dimension_se', '0.003795') }}">
+                </div>
+                <!-- Worst Values -->
+                <h4 style="grid-column: 1 / -1;">Worst Values</h4>
+                <div class="form-group">
+                    <label for="radius_worst">Radius Worst:</label>
+                    <input type="number" step="0.001" class="form-control" id="radius_worst" name="radius_worst" required value="{{ request.form.get('radius_worst', '16.269') }}">
+                </div>
+                <div class="form-group">
+                    <label for="texture_worst">Texture Worst:</label>
+                    <input type="number" step="0.001" class="form-control" id="texture_worst" name="texture_worst" required value="{{ request.form.get('texture_worst', '25.677') }}">
+                </div>
+                <div class="form-group">
+                    <label for="perimeter_worst">Perimeter Worst:</label>
+                    <input type="number" step="0.001" class="form-control" id="perimeter_worst" name="perimeter_worst" required value="{{ request.form.get('perimeter_worst', '107.261') }}">
+                </div>
+                <div class="form-group">
+                    <label for="area_worst">Area Worst:</label>
+                    <input type="number" step="0.001" class="form-control" id="area_worst" name="area_worst" required value="{{ request.form.get('area_worst', '880.583') }}">
+                </div>
+                <div class="form-group">
+                    <label for="smoothness_worst">Smoothness Worst:</label>
+                    <input type="number" step="0.000001" class="form-control" id="smoothness_worst" name="smoothness_worst" required value="{{ request.form.get('smoothness_worst', '0.132368') }}">
+                </div>
+                <div class="form-group">
+                    <label for="compactness_worst">Compactness Worst:</label>
+                    <input type="number" step="0.000001" class="form-control" id="compactness_worst" name="compactness_worst" required value="{{ request.form.get('compactness_worst', '0.254265') }}">
+                </div>
+                <div class="form-group">
+                    <label for="concavity_worst">Concavity Worst:</label>
+                    <input type="number" step="0.000001" class="form-control" id="concavity_worst" name="concavity_worst" required value="{{ request.form.get('concavity_worst', '0.272188') }}">
+                </div>
+                <div class="form-group">
+                    <label for="concave_points_worst">Concave Points Worst:</label>
+                    <input type="number" step="0.000001" class="form-control" id="concave_points_worst" name="concave_points_worst" required value="{{ request.form.get('concave_points_worst', '0.114606') }}">
+                </div>
+                <div class="form-group">
+                    <label for="symmetry_worst">Symmetry Worst:</label>
+                    <input type="number" step="0.000001" class="form-control" id="symmetry_worst" name="symmetry_worst" required value="{{ request.form.get('symmetry_worst', '0.290076') }}">
+                </div>
+                <div class="form-group">
+                    <label for="fractal_dimension_worst">Fractal Dimension Worst:</label>
+                    <input type="number" step="0.000001" class="form-control" id="fractal_dimension_worst" name="fractal_dimension_worst" required value="{{ request.form.get('fractal_dimension_worst', '0.083945') }}">
+                </div>
+            </div>
+            <!-- Move algorithm dropdown here -->
+            <div class="form-group" style="margin-bottom: 24px;">
+                <label for="algorithm">Select Algorithm:</label>
+                <select class="form-control" id="algorithm" name="algorithm" onchange="updateAlgorithmInfo()">
+                    {% for key, value in algorithms.items() %}
+                    <option value="{{ key }}" {% if result and result.algorithm.name == value.name %}selected{% endif %}>
+                        {{ value.name }} (Accuracy: {{ value.accuracy }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="submit-btn" style="display: block; margin: 30px auto;">Predict</button>
+        </form>
+
+        {% if result %}
+        <div class="result-section {% if result.prediction == 'Malignant' %}high-risk{% else %}low-risk{% endif %}">
+            <div class="prediction">
+                {{ result.prediction }}
+            </div>
+            {% if result.probability %}
+            <div class="probability">
+                Confidence in {{ result.prediction }}: {{ result.probability }}
+            </div>
+            {% endif %}
+            <div class="health-message">
+                {{ result.health_message | safe }}
+            </div>
+            <div class="result-explanation">
+                <p><strong>Understanding Your Results:</strong></p>
+                <ul>
+                    <li>This assessment is based on the diagnostic measurements you provided</li>
+                    <li>The confidence percentage shows how certain the AI model is about its {{ result.prediction }} prediction</li>
+                    <li>Remember: This is not a diagnosis, but a risk assessment tool</li>
+                    <li>Always consult with healthcare professionals for proper medical evaluation</li>
+                </ul>
+            </div>
+            {% if result.algorithm %}
+            <div class="algorithm-info">
+                Algorithm used: {{ result.algorithm.name }} (Accuracy: {{ result.algorithm.accuracy }})
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        const inputs = form.querySelectorAll('input');
+        let isValid = true;
+        
+        inputs.forEach(input => {
+            if (!input.value) {
+                isValid = false;
+                input.style.borderColor = '#ff4444';
+            } else {
+                input.style.borderColor = '#ddd';
+            }
+        });
+        
+        if (!isValid) {
+            e.preventDefault();
+            alert('Please fill in all measurements');
+        }
+    });
+
+    // If there's a result section, scroll to it
+    const resultSection = document.querySelector('.result-section');
+    if (resultSection) {
+        resultSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Add floating result display
+    if (resultSection) {
+        const floatingResult = document.createElement('div');
+        floatingResult.className = 'floating-result ' + 
+            (resultSection.classList.contains('high-risk') ? 'high-risk' : 'low-risk');
+        
+        const prediction = resultSection.querySelector('.prediction').textContent.trim();
+        const probability = resultSection.querySelector('.probability')?.textContent.trim() || '';
+        
+        floatingResult.innerHTML = `
+            <div class="float-prediction">${prediction}</div>
+            <div class="float-probability">${probability}</div>
+            <button class="view-details">View Full Details</button>
+        `;
+        
+        document.body.appendChild(floatingResult);
+        
+        // Handle view details button click
+        floatingResult.querySelector('.view-details').addEventListener('click', function() {
+            resultSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+    }
+});
+</script>
+{% endblock %} 

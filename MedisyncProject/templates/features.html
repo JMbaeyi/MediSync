@@ -1,0 +1,343 @@
+{% extends "base.html" %}
+
+{% block title %}Features - MediSync AI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .features-hero {
+        position: relative;
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('assets/hero.png');
+        background-size: cover;
+        background-position: center;
+        padding: 100px 0;
+        text-align: center;
+        color: white;
+        margin-bottom: 60px;
+    }
+
+    .features-hero h1 {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .features-hero p {
+        font-size: 1.5rem;
+        max-width: 600px;
+        margin: 0 auto;
+        opacity: 0.9;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        animation: fadeInUp 1s ease-out 0.2s backwards;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        padding: 0 40px;
+        max-width: 1200px;
+        margin: 0 auto 60px;
+    }
+
+    .feature-card {
+        background: white;
+        border-radius: 15px;
+        padding: 40px 30px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        border: 1px solid rgba(0,0,0,0.05);
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #00b09b, #96c93d);
+    }
+
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #00b09b15, #96c93d15);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .feature-icon i {
+        font-size: 24px;
+        background: linear-gradient(135deg, #00b09b, #96c93d);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .feature-title {
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #2c3e50;
+    }
+
+    .feature-description {
+        color: #666;
+        line-height: 1.7;
+        margin-bottom: 20px;
+        flex-grow: 1;
+        font-size: 1.1rem;
+    }
+
+    .feature-learn-more {
+        display: inline-block;
+        padding: 12px 25px;
+        background: linear-gradient(135deg, #00b09b, #96c93d);
+        color: white;
+        text-decoration: none;
+        border-radius: 30px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-align: center;
+        margin-top: auto;
+    }
+
+    .feature-learn-more:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .features-section {
+        padding: 100px 0;
+        background-color: #f8f9fa;
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 60px;
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .section-title h2 {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        background: linear-gradient(135deg, #00b09b, #96c93d);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .section-title p {
+        color: #666;
+        max-width: 600px;
+        margin: 0 auto;
+        font-size: 1.1rem;
+    }
+
+    .feature-stats {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        margin: 40px auto;
+        flex-wrap: wrap;
+        max-width: 1200px;
+        padding: 0 20px;
+    }
+
+    .stat-item {
+        text-align: center;
+        padding: 30px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        min-width: 200px;
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+
+    .stat-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #00b09b, #96c93d);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 10px;
+    }
+
+    .stat-label {
+        color: #666;
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+    .try-tools-section {
+        text-align: center;
+        padding: 80px 0;
+        background: white;
+    }
+
+    .try-tools-button {
+        display: inline-block;
+        background: white;
+        color: #00b09b;
+        padding: 15px 40px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .try-tools-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .features-hero h1 {
+            font-size: 2.8rem;
+        }
+
+        .features-hero p {
+            font-size: 1.2rem;
+        }
+
+        .features-grid {
+            grid-template-columns: 1fr;
+            padding: 0 20px;
+        }
+
+        .section-title h2 {
+            font-size: 2.2rem;
+        }
+
+        .stat-item {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="features-hero">
+    <h1>Our Features</h1>
+    <p>Discover how AI is revolutionizing healthcare diagnosis and analysis</p>
+</section>
+
+<section class="features-section">
+    <div class="section-title">
+        <h2>Advanced AI Solutions</h2>
+        <p>Explore our comprehensive suite of healthcare diagnostic tools powered by cutting-edge artificial intelligence</p>
+    </div>
+    
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-brain"></i>
+            </div>
+            <h3 class="feature-title">AI-Powered Analysis</h3>
+            <p class="feature-description">State-of-the-art machine learning algorithms process your health data to provide accurate risk assessments and insights.</p>
+            <a href="#" class="feature-learn-more">Learn More</a>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3 class="feature-title">Secure Data Handling</h3>
+            <p class="feature-description">Your health information is protected with enterprise-grade security and encryption protocols.</p>
+            <a href="#" class="feature-learn-more">Learn More</a>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-chart-bar"></i>
+            </div>
+            <h3 class="feature-title">Detailed Reports</h3>
+            <p class="feature-description">Receive comprehensive analysis reports with actionable insights and recommendations.</p>
+            <a href="#" class="feature-learn-more">Learn More</a>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-user-md"></i>
+            </div>
+            <h3 class="feature-title">Expert Support</h3>
+            <p class="feature-description">Access to professional medical guidance and consultation backed by AI insights.</p>
+            <a href="#" class="feature-learn-more">Learn More</a>
+        </div>
+    </div>
+</section>
+
+<section class="feature-stats">
+    <div class="stat-item">
+        <div class="stat-number">95%</div>
+        <div class="stat-label">Accuracy Rate</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">24/7</div>
+        <div class="stat-label">Available Support</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">10k+</div>
+        <div class="stat-label">Users Helped</div>
+    </div>
+</section>
+
+<section class="try-tools-section">
+    <a href="/ai-diagnosis" class="try-tools-button">Try Our Tools Now</a>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.feature-card');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, { threshold: 0.1 });
+
+    cards.forEach(card => {
+        observer.observe(card);
+    });
+});
+</script>
+{% endblock %} 

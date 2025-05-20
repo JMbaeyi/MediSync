@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}Solutions - MediSync AI{% endblock %}
+
+{% block extra_css %}
+<style>
+  .solutions-hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("{{ url_for('serve_static', path='assets/MEDISYNC 2.jpg') }}");
+    background-size: cover;
+    background-position: center;
+    padding: 100px 0;
+    text-align: center;
+    color: white;
+  }
+
+  .solutions-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .solutions-content h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+
+  .solutions-content p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+  }
+
+  .solutions-grid {
+    padding: 80px 0;
+    background: var(--background-light);
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .solution-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+  }
+
+  .solution-card {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+  }
+
+  .solution-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .solution-card h2 {
+    color: var(--text-primary);
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+
+  .solution-card p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .solution-card ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .solution-card li {
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    padding-left: 25px;
+    position: relative;
+  }
+
+  .solution-card li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+  }
+
+  .solution-card .cta-button {
+    display: inline-block;
+    padding: 12px 25px;
+    background: var(--gradient-1);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+  }
+
+  .solution-card .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (max-width: 768px) {
+    .solutions-content h1 {
+      font-size: 2.5rem;
+    }
+
+    .solution-card {
+      padding: 30px;
+    }
+
+    .solution-card h2 {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="solutions-hero">
+  <div class="solutions-content">
+    <h1>Our Solutions</h1>
+    <p>Discover how MediSync AI's innovative solutions are transforming healthcare delivery through intelligent technology and data-driven insights.</p>
+  </div>
+</section>
+
+<section class="solutions-grid">
+  <div class="container">
+    <div class="solution-cards">
+      <div class="solution-card">
+        <h2>AI Diagnostics</h2>
+        <p>Advanced diagnostic tools powered by machine learning algorithms.</p>
+        <ul>
+          <li>Lung Cancer Detection</li>
+          <li>Breast Cancer Analysis</li>
+          <li>Real-time Health Monitoring</li>
+          <li>Predictive Analytics</li>
+        </ul>
+        <a href="{{ url_for('ai_diagnosis') }}" class="cta-button">Try Now</a>
+      </div>
+
+      <div class="solution-card">
+        <h2>Patient Management</h2>
+        <p>Streamlined patient care and monitoring solutions.</p>
+        <ul>
+          <li>Electronic Health Records</li>
+          <li>Patient History Analysis</li>
+          <li>Treatment Tracking</li>
+          <li>Appointment Scheduling</li>
+        </ul>
+        <a href="{{ url_for('profile') }}" class="cta-button">Learn More</a>
+      </div>
+
+      <div class="solution-card">
+        <h2>Healthcare Analytics</h2>
+        <p>Data-driven insights for better healthcare decisions.</p>
+        <ul>
+          <li>Population Health Analysis</li>
+          <li>Treatment Effectiveness</li>
+          <li>Resource Optimization</li>
+          <li>Cost Management</li>
+        </ul>
+        <a href="{{ url_for('research') }}" class="cta-button">Explore</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

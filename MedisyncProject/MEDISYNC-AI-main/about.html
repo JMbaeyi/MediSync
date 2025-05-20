@@ -1,0 +1,364 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - MediSync AI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .about-hero {
+        position: relative;
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('assets/hero.png');
+        background-size: cover;
+        background-position: center;
+        min-height: 50vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        padding: 80px 20px;
+    }
+
+    .about-hero-content {
+        max-width: 800px;
+        margin: 0 auto;
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .about-hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .about-hero p {
+        font-size: 1.3rem;
+        line-height: 1.6;
+        opacity: 0.9;
+        max-width: 700px;
+        margin: 0 auto;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .mission-vision {
+        background: #f8f9fa;
+        padding: 100px 0;
+        position: relative;
+        margin-top: -50px;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .mission-vision-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+
+    .mission, .vision {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .mission:hover, .vision:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .mission h2, .vision h2 {
+        color: #2c3e50;
+        font-size: 2rem;
+        margin-bottom: 20px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .mission h2 i, .vision h2 i {
+        color: #00b09b;
+        font-size: 1.8rem;
+    }
+
+    .mission p, .vision p {
+        color: #666;
+        line-height: 1.6;
+        font-size: 1.1rem;
+    }
+
+    .leadership {
+        padding: 100px 0;
+        background: white;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 60px;
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .section-header h2 {
+        font-size: 2.5rem;
+        color: #2c3e50;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .section-header p {
+        font-size: 1.2rem;
+        color: #666;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .leadership-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 30px;
+    }
+
+    .leader-card {
+        background: white;
+        padding: 35px;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        animation: fadeInUp 1s ease-out;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .leader-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .leader-card h3 {
+        color: #2c3e50;
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .leader-card h3 i {
+        color: #00b09b;
+        font-size: 1.3rem;
+    }
+
+    .leader-card p {
+        color: #666;
+        line-height: 1.6;
+        font-size: 1.1rem;
+    }
+
+    .teams {
+        padding: 100px 0;
+        background: #f8f9fa;
+    }
+
+    .teams-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+    }
+
+    .team-card {
+        background: white;
+        padding: 35px;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .team-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .team-card h3 {
+        color: #2c3e50;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .team-card h3 i {
+        color: #00b09b;
+        font-size: 1.3rem;
+    }
+
+    .team-card ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .team-card li {
+        color: #666;
+        margin-bottom: 12px;
+        padding-left: 28px;
+        position: relative;
+        font-size: 1.05rem;
+    }
+
+    .team-card li::before {
+        content: '→';
+        position: absolute;
+        left: 0;
+        color: #00b09b;
+        font-weight: bold;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .about-hero h1 {
+            font-size: 2.5rem;
+        }
+
+        .about-hero p {
+            font-size: 1.1rem;
+        }
+
+        .mission-vision-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+        }
+
+        .leader-card, .team-card {
+            padding: 25px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="about-hero">
+    <div class="about-hero-content">
+        <h1>Transforming Healthcare with AI</h1>
+        <p>MediSync AI was founded with a vision to revolutionize healthcare through the power of artificial intelligence. Our journey began with a simple belief: that technology can make healthcare more accessible, efficient, and precise for everyone.</p>
+    </div>
+</section>
+
+<section class="mission-vision">
+    <div class="container">
+        <div class="mission-vision-grid">
+            <div class="mission">
+                <h2><i class="fas fa-bullseye"></i> Our Mission</h2>
+                <p>To empower healthcare providers and patients with AI-driven tools that enhance diagnostic accuracy, optimize patient management, and improve overall healthcare efficiency. We're committed to making advanced medical technology accessible to all.</p>
+            </div>
+            <div class="vision">
+                <h2><i class="fas fa-eye"></i> Our Vision</h2>
+                <p>To revolutionize healthcare by making AI-powered medical assistance accessible worldwide, ensuring better health outcomes through intelligent technology and data-driven insights that support medical professionals.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="leadership">
+    <div class="container">
+        <div class="section-header">
+            <h2>Leadership Team</h2>
+            <p>Meet the visionaries and experts driving innovation in healthcare AI</p>
+        </div>
+        <div class="leadership-grid">
+            <div class="leader-card">
+                <h3><i class="fas fa-user-tie"></i> Chief Executive Officer</h3>
+                <p>Leads our strategic vision, drives business growth, and builds key partnerships to expand our impact in healthcare technology.</p>
+            </div>
+            <div class="leader-card">
+                <h3><i class="fas fa-microchip"></i> Chief Technology Officer</h3>
+                <p>Oversees AI development, technical architecture, and ensures robust cybersecurity measures for our healthcare solutions.</p>
+            </div>
+            <div class="leader-card">
+                <h3><i class="fas fa-user-md"></i> Chief Medical Officer</h3>
+                <p>Ensures medical accuracy, compliance with healthcare regulations, and leads our clinical research initiatives.</p>
+            </div>
+            <div class="leader-card">
+                <h3><i class="fas fa-database"></i> Chief Data Officer</h3>
+                <p>Manages medical data processing, AI model training, and oversees data privacy and security protocols.</p>
+            </div>
+            <div class="leader-card">
+                <h3><i class="fas fa-bullhorn"></i> Chief Marketing Officer</h3>
+                <p>Leads brand strategy, healthcare partner outreach, and develops strategic partnerships in the medical sector.</p>
+            </div>
+            <div class="leader-card">
+                <h3><i class="fas fa-cogs"></i> Chief Operations Officer</h3>
+                <p>Ensures seamless integration of our AI solutions into healthcare institutions and optimizes operational efficiency.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="teams">
+    <div class="container">
+        <div class="section-header">
+            <h2>Our Teams</h2>
+            <p>Dedicated professionals working together to advance healthcare technology</p>
+        </div>
+        <div class="teams-grid">
+            <div class="team-card">
+                <h3><i class="fas fa-robot"></i> Technology & AI Development</h3>
+                <ul>
+                    <li>AI Engineers & Researchers</li>
+                    <li>Data Scientists & Analysts</li>
+                    <li>Software Development Experts</li>
+                    <li>Cloud Infrastructure Engineers</li>
+                </ul>
+            </div>
+            <div class="team-card">
+                <h3><i class="fas fa-heartbeat"></i> Medical & Compliance</h3>
+                <ul>
+                    <li>Medical Advisory Board</li>
+                    <li>Regulatory Compliance Specialists</li>
+                    <li>Clinical Research Teams</li>
+                    <li>Healthcare Policy Experts</li>
+                </ul>
+            </div>
+            <div class="team-card">
+                <h3><i class="fas fa-chart-line"></i> Marketing & Sales</h3>
+                <ul>
+                    <li>Digital Marketing Strategists</li>
+                    <li>Healthcare Sales Specialists</li>
+                    <li>Business Development Managers</li>
+                    <li>Partner Relations Team</li>
+                </ul>
+            </div>
+            <div class="team-card">
+                <h3><i class="fas fa-hands-helping"></i> Support & Operations</h3>
+                <ul>
+                    <li>Patient Support Representatives</li>
+                    <li>Healthcare Partner Success Team</li>
+                    <li>Technical Support Specialists</li>
+                    <li>Quality Assurance Team</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

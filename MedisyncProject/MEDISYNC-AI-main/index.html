@@ -1,0 +1,354 @@
+{% extends "base.html" %}
+
+{% block title %}MEDISYNC AI - Home{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero {
+        position: relative;
+        min-height: 100vh;
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('assets/hero.png');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 80px 20px;
+        overflow: hidden;
+    }
+
+    .hero::before {
+        display: none;
+    }
+
+    .hero-content {
+        max-width: 800px;
+        color: white;
+        z-index: 2;
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .hero-content h1 {
+        font-size: 4rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        line-height: 1.2;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-content p {
+        font-size: 1.5rem;
+        margin-bottom: 40px;
+        opacity: 0.9;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .cta-buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .cta-button {
+        display: inline-block;
+        padding: 15px 40px;
+        border-radius: 30px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .cta-button:first-child {
+        background: white;
+        color: #00b09b;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .cta-button.secondary {
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+    }
+
+    .cta-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .cta-button.secondary:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .features {
+        padding: 100px 0;
+        background: #f8f9fa;
+    }
+
+    .features h2 {
+        text-align: center;
+        font-size: 2.8rem;
+        margin-bottom: 30px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #00b09b, #96c93d);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .features p {
+        text-align: center;
+        color: #666;
+        max-width: 600px;
+        margin: 0 auto 60px;
+        font-size: 1.1rem;
+    }
+
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .feature-card {
+        background: white;
+        padding: 40px 30px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #00b09b, #96c93d);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-card i {
+        font-size: 3rem;
+        background: linear-gradient(135deg, #00b09b, #96c93d);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 25px;
+        display: inline-block;
+    }
+
+    .feature-card h3 {
+        font-size: 1.6rem;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+    .feature-card p {
+        color: #666;
+        line-height: 1.7;
+        font-size: 1.1rem;
+        margin: 0;
+        text-align: center;
+        max-width: none;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero-content h1 {
+            font-size: 2.8rem;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+        }
+
+        .cta-buttons {
+            flex-direction: column;
+            padding: 0 20px;
+        }
+
+        .cta-button {
+            width: 100%;
+        }
+
+        .features {
+            padding: 60px 0;
+        }
+
+        .features h2 {
+            font-size: 2.2rem;
+        }
+
+        .feature-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Add these new styles for the user menu */
+    .user-menu {
+        position: relative;
+        display: inline-block;
+    }
+
+    .user-menu-button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: var(--gradient-1);
+        color: white;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .user-menu-button i {
+        font-size: 1.2rem;
+    }
+
+    .user-menu-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 8px 0;
+        min-width: 200px;
+        display: none;
+        z-index: 1000;
+    }
+
+    .user-menu:hover .user-menu-dropdown {
+        display: block;
+    }
+
+    .user-menu-dropdown a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        color: var(--text-primary);
+        text-decoration: none;
+        transition: background-color 0.2s ease;
+    }
+
+    .user-menu-dropdown a:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .user-menu-dropdown i {
+        font-size: 1.1rem;
+        width: 20px;
+        text-align: center;
+    }
+
+    .sign-in-button {
+        padding: 8px 20px;
+        background: var(--gradient-1);
+        color: white;
+        border-radius: 20px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .sign-in-button:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--hover-shadow);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1>Welcome to MEDISYNC AI</h1>
+        <p>Advanced healthcare solutions powered by artificial intelligence</p>
+        <div class="cta-buttons">
+            {% if not is_authenticated %}
+            <a href="/login" class="cta-button">Get Started</a>
+            <a href="/signup" class="cta-button secondary">Learn More</a>
+            {% else %}
+            <a href="/ai-diagnosis" class="cta-button">Start Diagnosis</a>
+            <a href="/features" class="cta-button secondary">Explore Features</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <h2>Our Services</h2>
+    <p>Discover our comprehensive suite of AI-powered healthcare solutions</p>
+    <div class="feature-grid">
+        <div class="feature-card">
+            <i class="fas fa-lungs"></i>
+            <h3>Lung Cancer Prediction</h3>
+            <p>Advanced AI model for early lung cancer risk assessment using state-of-the-art machine learning algorithms.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-female"></i>
+            <h3>Breast Cancer Prediction</h3>
+            <p>Accurate breast cancer diagnosis using sophisticated pattern recognition and deep learning techniques.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-chart-line"></i>
+            <h3>Health Analytics</h3>
+            <p>Comprehensive health data analysis providing actionable insights for better healthcare decisions.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-user-md"></i>
+            <h3>Expert Support</h3>
+            <p>Professional medical guidance and consultation backed by AI-powered diagnostic tools.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add animation to feature cards on scroll
+    const cards = document.querySelectorAll('.feature-card');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, { threshold: 0.1 });
+
+    cards.forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'all 0.6s ease-out';
+        observer.observe(card);
+    });
+});
+</script>
+{% endblock %}

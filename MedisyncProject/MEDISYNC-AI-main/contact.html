@@ -1,0 +1,348 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - MediSync AI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contact-hero {
+        position: relative;
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('assets/hero.png');
+        background-size: cover;
+        background-position: center;
+        min-height: 50vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        padding: 80px 20px;
+    }
+
+    .contact-hero-content {
+        max-width: 800px;
+        margin: 0 auto;
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .contact-hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .contact-hero p {
+        font-size: 1.3rem;
+        line-height: 1.6;
+        opacity: 0.9;
+        max-width: 600px;
+        margin: 0 auto;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .contact-section {
+        background: #f8f9fa;
+        padding: 100px 0;
+        position: relative;
+        margin-top: -50px;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .contact-grid {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 40px;
+    }
+
+    .contact-info {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .contact-info h2 {
+        color: #2c3e50;
+        font-size: 1.8rem;
+        margin-bottom: 30px;
+        font-weight: 600;
+    }
+
+    .contact-item {
+        margin-bottom: 25px;
+        transition: all 0.3s ease;
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    .contact-item:hover {
+        background: rgba(0,176,155,0.05);
+        transform: translateX(5px);
+    }
+
+    .contact-item h3 {
+        color: #2c3e50;
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 600;
+    }
+
+    .contact-item p {
+        color: #666;
+        line-height: 1.6;
+        font-size: 1.05rem;
+        margin-left: 32px;
+    }
+
+    .contact-item i {
+        color: #00b09b;
+        font-size: 1.4rem;
+        width: 20px;
+        text-align: center;
+    }
+
+    .contact-form {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        animation: fadeInUp 1s ease-out 0.2s backwards;
+    }
+
+    .contact-form h2 {
+        color: #2c3e50;
+        font-size: 1.8rem;
+        margin-bottom: 30px;
+        font-weight: 600;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        display: block;
+        color: #2c3e50;
+        margin-bottom: 8px;
+        font-weight: 500;
+        font-size: 1.05rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid rgba(0,0,0,0.1);
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #00b09b;
+        box-shadow: 0 0 0 2px rgba(0,176,155,0.1);
+        background: white;
+    }
+
+    textarea.form-control {
+        height: 150px;
+        resize: vertical;
+    }
+
+    .submit-button {
+        background: linear-gradient(135deg, #00b09b, #96c93d);
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        border-radius: 30px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .submit-button i {
+        font-size: 0.9em;
+        transition: transform 0.3s ease;
+    }
+
+    .submit-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .submit-button:hover i {
+        transform: translateX(5px);
+    }
+
+    .success-message {
+        background: #f0fff4;
+        color: #00b09b;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 0.95rem;
+        border-left: 4px solid #00b09b;
+        display: none;
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+    .error-message {
+        background: #fff5f5;
+        color: #e74c3c;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 0.95rem;
+        border-left: 4px solid #e74c3c;
+        display: none;
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+    .success-message.show,
+    .error-message.show {
+        display: block;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .contact-hero h1 {
+            font-size: 2.5rem;
+        }
+
+        .contact-hero p {
+            font-size: 1.1rem;
+        }
+
+        .contact-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .contact-form, .contact-info {
+            padding: 30px;
+        }
+
+        .contact-item {
+            padding: 12px;
+        }
+
+        .contact-item:hover {
+            transform: none;
+        }
+
+        .submit-button {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="contact-hero">
+    <div class="contact-hero-content">
+        <h1>Get in Touch</h1>
+        <p>Have questions or want to learn more? We're here to help you with any inquiries about our AI healthcare solutions.</p>
+    </div>
+</section>
+
+<section class="contact-section">
+    <div class="container">
+        <div class="contact-grid">
+            <div class="contact-info">
+                <h2>Contact Information</h2>
+                <div class="contact-item">
+                    <h3><i class="fas fa-map-marker-alt"></i> Location</h3>
+                    <p>123 Healthcare Avenue<br>Medical District<br>New York, NY 10001</p>
+                </div>
+                <div class="contact-item">
+                    <h3><i class="fas fa-phone"></i> Phone</h3>
+                    <p>+1 (555) 123-4567</p>
+                </div>
+                <div class="contact-item">
+                    <h3><i class="fas fa-envelope"></i> Email</h3>
+                    <p>contact@medisync.ai</p>
+                </div>
+                <div class="contact-item">
+                    <h3><i class="fas fa-clock"></i> Business Hours</h3>
+                    <p>Monday - Friday: 9:00 AM - 6:00 PM<br>Saturday: 10:00 AM - 2:00 PM<br>Sunday: Closed</p>
+                </div>
+            </div>
+
+            <div class="contact-form">
+                <h2>Send Us a Message</h2>
+                {% if success %}
+                <div class="success-message show">{{ success }}</div>
+                {% endif %}
+                {% if error %}
+                <div class="error-message show">{{ error }}</div>
+                {% endif %}
+                <form action="{{ url_for('contact') }}" method="POST" id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" class="form-control" required placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" class="form-control" required placeholder="Enter your email address">
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject" class="form-control" required placeholder="What is your message about?">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" class="form-control" required placeholder="Type your message here..."></textarea>
+                    </div>
+                    <button type="submit" class="submit-button">
+                        Send Message
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% block extra_js %}
+<script>
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const subject = document.getElementById('subject').value;
+        const message = document.getElementById('message').value;
+        const errorMessage = document.querySelector('.error-message');
+        
+        if (!name || !email || !subject || !message) {
+            e.preventDefault();
+            errorMessage.textContent = 'Please fill in all fields';
+            errorMessage.classList.add('show');
+            return;
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %}

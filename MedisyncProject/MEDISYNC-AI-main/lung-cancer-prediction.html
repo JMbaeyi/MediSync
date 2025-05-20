@@ -1,0 +1,580 @@
+{% extends "base.html" %}
+
+{% block title %}Lung Cancer Risk Assessment - MediSync AI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .prediction-form {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin: 40px auto;
+        max-width: 1000px;
+    }
+    
+    .form-intro {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        border-left: 4px solid var(--primary);
+    }
+
+    .form-intro h3 {
+        color: var(--primary);
+        margin-bottom: 10px;
+    }
+
+    .form-intro p {
+        color: #2c3e50;
+        margin-bottom: 10px;
+        line-height: 1.5;
+    }
+
+    .form-intro ul {
+        margin-left: 20px;
+        color: #2c3e50;
+    }
+
+    .form-intro li {
+        margin-bottom: 5px;
+    }
+    
+    .prediction-form h2 {
+        color: var(--primary);
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .form-section {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .section-header h3 {
+        color: #2c3e50;
+        margin: 0;
+        margin-right: 10px;
+    }
+
+    .section-info {
+        background-color: #e3f2fd;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        font-size: 14px;
+        color: #1565c0;
+    }
+    
+    .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -10px;
+    }
+    
+    .form-group {
+        flex: 1;
+        min-width: 250px;
+        padding: 0 10px;
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 16px;
+        color: #2c3e50;
+    }
+
+    .form-group .help-text {
+        font-size: 12px;
+        color: #666;
+        margin-top: 4px;
+    }
+    
+    .form-group select,
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    
+    .form-group select:focus,
+    .form-group input:focus {
+        border-color: var(--primary);
+        outline: none;
+    }
+
+    .option-description {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: #666;
+        margin-top: 4px;
+    }
+    
+    .submit-btn {
+        background: var(--gradient-1);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        display: block;
+        margin: 30px auto;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    
+    .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .submit-btn:active {
+        transform: translateY(-1px);
+    }
+    
+    .result-section {
+        background-color: #fff;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin: 30px 0;
+        animation: slideDown 0.5s ease-out;
+        scroll-margin-top: 100px;
+    }
+
+    .result-explanation {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 15px;
+        font-size: 14px;
+        color: #2c3e50;
+        line-height: 1.6;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .prediction {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 15px 0;
+    }
+    
+    .prediction.high-risk {
+        background-color: #ffe5e5;
+        color: #d63031;
+    }
+    
+    .prediction.low-risk {
+        background-color: #e5ffe5;
+        color: #27ae60;
+    }
+    
+    .health-message {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 15px;
+    }
+    
+    select.form-control {
+        height: 45px;
+        font-size: 16px;
+    }
+    
+    .error-message {
+        background-color: #ffe6e6;
+        color: #d32f2f;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .health-message strong {
+        color: #333;
+        display: block;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+    }
+
+    .high-risk .health-message {
+        border-left: 4px solid #ff4444;
+    }
+
+    .low-risk .health-message {
+        border-left: 4px solid #00c853;
+    }
+    
+    @media (max-width: 768px) {
+        .prediction-form {
+            padding: 20px;
+        }
+        
+        .form-group {
+            min-width: 100%;
+        }
+    }
+
+    .probability {
+        font-size: 18px;
+        margin-top: 10px;
+        padding: 5px;
+        border-radius: 4px;
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .high-risk .probability {
+        color: #d63031;
+    }
+
+    .low-risk .probability {
+        color: #27ae60;
+    }
+
+    .algorithm-select {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .algorithm-select label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+
+    .algorithm-select select {
+        padding: 8px 15px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        font-size: 16px;
+        background-color: white;
+    }
+
+    .floating-result {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        z-index: 1000;
+        max-width: 300px;
+        text-align: center;
+        animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    .floating-result.high-risk {
+        border-left: 4px solid #ff4444;
+    }
+
+    .floating-result.low-risk {
+        border-left: 4px solid #00c853;
+    }
+
+    .float-prediction {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .high-risk .float-prediction {
+        color: #d63031;
+    }
+
+    .low-risk .float-prediction {
+        color: #27ae60;
+    }
+
+    .float-probability {
+        font-size: 16px;
+        margin-bottom: 15px;
+        color: #666;
+    }
+
+    .view-details {
+        background: var(--gradient-1);
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    .view-details:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="prediction-form">
+        <h2>Lung Cancer Risk Assessment</h2>
+
+        <div class="form-intro">
+            <h3>About This Assessment</h3>
+            <p>This tool utilizes advanced machine learning and artificial intelligence, trained on real-world clinical and survey data, to estimate your risk of lung cancer based on your symptoms and risk factors. It is designed to help you better understand your health profile and support informed discussions with your healthcare provider. While the tool provides a personalized risk estimate, it does not replace professional medical advice, diagnosis, or treatment. Always consult a healthcare professional for any health concerns.</p>
+            <ul>
+                <li>Answer all questions honestly for the most accurate assessment</li>
+                <li>Select "Yes" only if you consistently experience the symptom</li>
+                <li>The assessment takes into account both symptoms and risk factors</li>
+            </ul>
+            <p style="margin-top:10px;"><strong>How it works:</strong> The diagnostic tool analyzes your responses using AI/ML models to estimate your risk. For any concerns, always consult a healthcare professional.</p>
+        </div>
+        
+        {% if error %}
+        <div class="error-message">{{ error }}</div>
+        {% endif %}
+
+        <form action="/predict_lung_cancer" method="post" id="predictionForm">
+            <div class="input-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                <div class="form-group">
+                    <label for="gender">Gender:</label>
+                    <select class="form-control" id="gender" name="gender" required>
+                        <option value="1" {% if request.form.get('gender') == '1' %}selected{% endif %}>Male</option>
+                        <option value="2" {% if request.form.get('gender') == '2' %}selected{% endif %}>Female</option>
+                </select>
+                </div>
+                <div class="form-group">
+                    <label for="age">Age:</label>
+                    <input type="number" class="form-control" id="age" name="age" min="1" max="120" required value="{{ request.form.get('age', '') }}">
+                </div>
+                    <div class="form-group">
+                    <label for="smoking">Smoking:</label>
+                    <select class="form-control" id="smoking" name="smoking" required>
+                        <option value="1" {% if request.form.get('smoking') == '1' %}selected{% endif %}>No</option>
+                        <option value="2" {% if request.form.get('smoking') == '2' %}selected{% endif %}>Yes</option>
+                        </select>
+                </div>
+                <div class="form-group">
+                    <label for="yellow_fingers">Yellow Fingers:</label>
+                    <select class="form-control" id="yellow_fingers" name="yellow_fingers" required>
+                        <option value="1" {% if request.form.get('yellow_fingers') == '1' %}selected{% endif %}>No</option>
+                        <option value="2" {% if request.form.get('yellow_fingers') == '2' %}selected{% endif %}>Yes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="anxiety">Anxiety:</label>
+                    <select class="form-control" id="anxiety" name="anxiety" required>
+                        <option value="1" {% if request.form.get('anxiety') == '1' %}selected{% endif %}>No</option>
+                        <option value="2" {% if request.form.get('anxiety') == '2' %}selected{% endif %}>Yes</option>
+                    </select>
+                </div>
+                    <div class="form-group">
+                    <label for="peer_pressure">Peer Pressure:</label>
+                    <select class="form-control" id="peer_pressure" name="peer_pressure" required>
+                        <option value="1" {% if request.form.get('peer_pressure') == '1' %}selected{% endif %}>No</option>
+                        <option value="2" {% if request.form.get('peer_pressure') == '2' %}selected{% endif %}>Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                    <label for="chronic_disease">Chronic Disease:</label>
+                    <select class="form-control" id="chronic_disease" name="chronic_disease" required>
+                        <option value="1" {% if request.form.get('chronic_disease') == '1' %}selected{% endif %}>No</option>
+                        <option value="2" {% if request.form.get('chronic_disease') == '2' %}selected{% endif %}>Yes</option>
+                        </select>
+                </div>
+                    <div class="form-group">
+                    <label for="fatigue">Fatigue:</label>
+                    <select class="form-control" id="fatigue" name="fatigue" required>
+                        <option value="1" {% if request.form.get('fatigue') == '1' %}selected{% endif %}>No</option>
+                        <option value="2" {% if request.form.get('fatigue') == '2' %}selected{% endif %}>Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                    <label for="allergy">Allergy:</label>
+                    <select class="form-control" id="allergy" name="allergy" required>
+                        <option value="1" {% if request.form.get('allergy') == '1' %}selected{% endif %}>No</option>
+                        <option value="2" {% if request.form.get('allergy') == '2' %}selected{% endif %}>Yes</option>
+                        </select>
+                </div>
+                    <div class="form-group">
+                    <label for="wheezing">Wheezing:</label>
+                    <select class="form-control" id="wheezing" name="wheezing" required>
+                        <option value="1" {% if request.form.get('wheezing') == '1' %}selected{% endif %}>No</option>
+                        <option value="2" {% if request.form.get('wheezing') == '2' %}selected{% endif %}>Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                    <label for="alcohol">Alcohol Consuming:</label>
+                    <select class="form-control" id="alcohol" name="alcohol" required>
+                        <option value="1" {% if request.form.get('alcohol') == '1' %}selected{% endif %}>No</option>
+                        <option value="2" {% if request.form.get('alcohol') == '2' %}selected{% endif %}>Yes</option>
+                        </select>
+                </div>
+                    <div class="form-group">
+                    <label for="coughing">Coughing:</label>
+                    <select class="form-control" id="coughing" name="coughing" required>
+                        <option value="1" {% if request.form.get('coughing') == '1' %}selected{% endif %}>No</option>
+                        <option value="2" {% if request.form.get('coughing') == '2' %}selected{% endif %}>Yes</option>
+                        </select>
+                </div>
+                    <div class="form-group">
+                    <label for="shortness_of_breath">Shortness of Breath:</label>
+                    <select class="form-control" id="shortness_of_breath" name="shortness_of_breath" required>
+                        <option value="1" {% if request.form.get('shortness_of_breath') == '1' %}selected{% endif %}>No</option>
+                        <option value="2" {% if request.form.get('shortness_of_breath') == '2' %}selected{% endif %}>Yes</option>
+                        </select>
+                </div>
+                    <div class="form-group">
+                    <label for="swallowing_difficulty">Swallowing Difficulty:</label>
+                    <select class="form-control" id="swallowing_difficulty" name="swallowing_difficulty" required>
+                        <option value="1" {% if request.form.get('swallowing_difficulty') == '1' %}selected{% endif %}>No</option>
+                        <option value="2" {% if request.form.get('swallowing_difficulty') == '2' %}selected{% endif %}>Yes</option>
+                        </select>
+                </div>
+                    <div class="form-group">
+                    <label for="chest_pain">Chest Pain:</label>
+                    <select class="form-control" id="chest_pain" name="chest_pain" required>
+                        <option value="1" {% if request.form.get('chest_pain') == '1' %}selected{% endif %}>No</option>
+                        <option value="2" {% if request.form.get('chest_pain') == '2' %}selected{% endif %}>Yes</option>
+                        </select>
+                </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 24px;">
+                <label for="algorithm">Select Algorithm:</label>
+                <select class="form-control" id="algorithm" name="algorithm" onchange="updateAlgorithmInfo()">
+                    {% for key, value in algorithms.items() %}
+                    <option value="{{ key }}" {% if result and result.algorithm.name == value.name %}selected{% endif %}>
+                        {{ value.name }} (Accuracy: {{ value.accuracy }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="submit-btn">Get Assessment</button>
+        </form>
+
+        {% if result %}
+        <div class="result-section {% if result.prediction == 'High Risk' %}high-risk{% else %}low-risk{% endif %}">
+            <div class="prediction">
+                {{ result.prediction }}
+            </div>
+            {% if result.probability %}
+            <div class="probability">
+                Confidence in {{ result.prediction }}: {{ result.probability }}
+            </div>
+            {% endif %}
+            <div class="health-message">
+                {{ result.health_message | safe }}
+            </div>
+            <div class="result-explanation">
+                <p><strong>Understanding Your Results:</strong></p>
+                <ul>
+                    <li>This assessment is based on the symptoms and risk factors you provided</li>
+                    <li>The confidence percentage shows how certain the AI model is about its {{ result.prediction }} prediction</li>
+                    <li>Remember: This is not a diagnosis, but a risk assessment tool</li>
+                    <li>Always consult with healthcare professionals for proper medical evaluation</li>
+                </ul>
+            </div>
+            {% if result.algorithm %}
+            <div class="algorithm-info">
+                Algorithm used: {{ result.algorithm.name }} (Accuracy: {{ result.algorithm.accuracy }})
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    
+    // Handle form validation
+    form.addEventListener('submit', function(e) {
+        const inputs = form.querySelectorAll('select, input');
+        let isValid = true;
+        
+        inputs.forEach(input => {
+            if (!input.value) {
+                isValid = false;
+                input.style.borderColor = '#ff4444';
+            } else {
+                input.style.borderColor = '#ddd';
+            }
+        });
+        
+        if (!isValid) {
+            e.preventDefault();
+            alert('Please fill in all fields for an accurate assessment');
+        }
+    });
+
+    // If there's a result section, scroll to it
+    const resultSection = document.querySelector('.result-section');
+    if (resultSection) {
+        resultSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Add floating result display
+    if (resultSection) {
+        const floatingResult = document.createElement('div');
+        floatingResult.className = 'floating-result ' + 
+            (resultSection.classList.contains('high-risk') ? 'high-risk' : 'low-risk');
+        
+        const prediction = resultSection.querySelector('.prediction').textContent.trim();
+        const probability = resultSection.querySelector('.probability')?.textContent.trim() || '';
+        
+        floatingResult.innerHTML = `
+            <div class="float-prediction">${prediction}</div>
+            <div class="float-probability">${probability}</div>
+            <button class="view-details">View Full Details</button>
+        `;
+        
+        document.body.appendChild(floatingResult);
+        
+        // Handle view details button click
+        floatingResult.querySelector('.view-details').addEventListener('click', function() {
+            resultSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+    }
+});
+</script>
+{% endblock %}
